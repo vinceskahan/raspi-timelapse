@@ -1,0 +1,14 @@
+proc            /proc           proc    defaults          0       0
+PARTUUID=be701b5a-01  /boot           vfat    defaults          0       2
+PARTUUID=be701b5a-02  /               ext4    defaults,noatime  0       1
+# a swapfile is not a swap partition, no line here
+#   use  dphys-swapfile swap[on|off]  for that
+#
+#---- run motion in ramdisk ---
+# obviously do 'mkdir -p /mnt/ramdisk' before this can work
+#
+tmpfs /mnt/ramdisk tmpfs size=260M 0 0
+#---- put logs and tmp dirs in ramdisk too ---
+tmpfs           /tmp            tmpfs   defaults,nosuid,mode=0755,nodev,noatime   0       0
+tmpfs           /var/log        tmpfs   defaults,nosuid,mode=0755,nodev,noatime   0       0
+tmpfs           /var/tmp        tmpfs   defaults,nosuid,mode=0755,nodev,noatime   0       0

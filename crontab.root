@@ -1,0 +1,21 @@
+#--- turn on and off based on time of day
+#    (be sure to clean up junk from start/stop runs)
+#
+# 15  5  * * * wget http://localhost:8080/0/config/set?ffmpeg_timelapse=60 >/dev/null 2>&1
+# 45 20  * * * wget http://localhost:8080/0/config/set?ffmpeg_timelapse=0 >/dev/null 2>&1
+# 22  1  * * * find /root/set*ffmpeg* -type f           -exec rm {} \;
+
+#--- delete motion files over a day old
+5 0  * * * find /mnt/ramdisk/motion -type f -ctime +2 -exec rm {} \;
+
+#--- upload snapshot to weather underground
+#####0-59/20 7-20 * * * /root/bin/upload-snap.sh
+
+#--- try to self-heal wifi
+######*/10 * * * * /root/bin/netmon.sh
+
+#Ansible: try to self-heal network as needed
+*/10 * * * * /usr/local/bin/netmon.sh
+
+#--- postprocess webcam image
+* * * * * /root/bin/overlay-image.sh

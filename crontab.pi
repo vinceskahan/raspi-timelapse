@@ -1,0 +1,23 @@
+MAIL=
+
+#
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# m h dom mon dow usercommand
+#
+50 * * * * logger -t '[CPUTEMP]' `vcgencmd measure_temp`
+4,9,14,19,24,29,34,39,44,49,54,59  * * * * /home/pi/bin/publish-cpu-temp.sh
+
+# after running rename output dir ala out.20240120
+* 6-17 * * * /home/pi/timelapse/snap.sh
+10  18 * * * /home/pi/timelapse/rotate.sh
+12  18 * * * /home/pi/timelapse/process.sh
+20   19 * * * rsync /home/pi/timelapse/movies/*.mp4 lightsail:/var/www/html/timelapse
+30  19 * * * ssh lightsail bash /var/www/html/timelapse/generate-index.sh
+
+# do timelapse snap the other way
+*/2 * * * * sudo /home/pi/timelapse/fake-snap.sh
